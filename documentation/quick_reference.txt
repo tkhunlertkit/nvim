@@ -1,0 +1,274 @@
+-- QUICK REFERENCE CARD
+-- Keep this handy while migrating and using the new configuration
+
+================================================================================
+FILE LOCATIONS & PURPOSE
+================================================================================
+
+init.lua
+  └─ Entry point for Neovim
+  └─ Only loads: vim.opt.runtimepath and require("config.init")
+  └─ Keep this minimal!
+
+lua/config/init.lua
+  └─ Master configuration loader
+  └─ Loads all modules in correct order
+  └─ Has error handling with safe_require()
+
+lua/config/mason.lua
+  └─ Language server package manager setup
+  └─ Installs: pyright, ts_ls, lua_ls, efm
+  └─ Handles automatic installation
+
+lua/config/lspconfig.lua
+  └─ Language server configurations
+  └─ Defines how each server behaves
+  └─ Sets capabilities and common on_attach handler
+
+lua/config/keymaps.lua
+  └─ All keyboard shortcuts for LSP
+  └─ Global diagnostics keymaps
+  └─ Buffer-local keymaps via LspAttach autocmd
+
+lua/config/diagnostics.lua
+  └─ How errors/warnings/hints are displayed
+  └─ Sign definitions and icons
+  └─ Virtual text configuration
+
+lua/utils/helpers.lua
+  └─ Utility functions for common tasks
+  └─ LSP helpers, notification utilities
+  └─ Debugging functions
+
+================================================================================
+KEYMAP REFERENCE
+================================================================================
+
+DIAGNOSTICS (Global - works everywhere):
+  <leader>e      →  Show diagnostic under cursor
+  [d             →  Go to previous diagnostic
+  ]d             →  Go to next diagnostic
+  <leader>q      →  Open location list with diagnostics
+
+LSP NAVIGATION (Requires LSP server):
+  gd             →  Go to definition
+  gD             →  Go to declaration
+  gy             →  Go to type definition
+  gi             →  Go to implementation
+  gr             →  Find all references
+
+LSP ACTIONS (Requires LSP server):
+  K              →  Show hover documentation
+  <C-k>          →  Show signature help
+  <leader>rn     →  Rename symbol
+  <leader>ca     →  Code action (fix/refactor)
+  <leader>f      →  Format file
+
+WORKSPACE (Requires LSP server):
+  <leader>wa     →  Add workspace folder
+  <leader>wr     →  Remove workspace folder
+  <leader>wl     →  List workspace folders
+
+================================================================================
+COMMON COMMANDS
+================================================================================
+
+:LspInfo                   Show active LSP clients
+:LspStart                  Start LSP servers
+:LspStop                   Stop LSP servers
+:LspRestart                Restart all LSP servers
+:Mason                     Open package manager UI
+:MasonInstall <server>     Install a specific server
+:checkhealth               Check plugin health
+:messages                  View recent messages
+:lua vim.notify("msg")     Test notifications
+
+================================================================================
+TROUBLESHOOTING FLOWCHART
+================================================================================
+
+Problem: Neovim won't start
+  → Check: nvim --headless "+q" 2>&1 | head -20
+  → Check: :messages
+  → Check: ~/.cache/nvim/lsp.log
+
+Problem: LSP keymaps don't work
+  → Check: :LspInfo (should show attached clients)
+  → Check: Open a recognized file (.py, .ts, .lua)
+  → Check: :lua print(vim.lsp.get_active_clients())
+
+Problem: Language servers not installing
+  → Check: :Mason (open UI and inspect)
+  → Fix: :MasonInstall pyright ts_ls lua_ls efm
+  → Fix: Check internet connection
+
+Problem: Formatting not working
+  → Check: <leader>f tries to run
+  → Fix: Verify formatters installed:
+         black (Python), prettier (TS/JS), lua-format (Lua)
+  → Check: :LspInfo to see which server is attached
+
+Problem: Diagnostics not showing
+  → Check: Create intentional error in file
+  → Check: lua/config/diagnostics.lua icons are set
+  → Fix: Try :lua vim.diagnostic.open_float()
+
+Problem: Keymaps conflict with other plugins
+  → Check: :map <keyname>
+  → Fix: Change in lua/config/keymaps.lua
+  → Example: buf_keymap("n", "gd", ...) → buf_keymap("n", "<leader>gd", ...)
+
+================================================================================
+COMMON CUSTOMIZATIONS
+================================================================================
+
+Add a new language server:
+
+  Edit: lua/config/lspconfig.lua
+  Add:  lspconfig.gopls.setup({
+          on_attach = on_attach_default,
+        })
+  
+  Edit: lua/config/mason.lua
+  Find: ensure_installed = { ... }
+  Add:  "gopls"
+
+
+Change diagnostic icons:
+
+  Edit: lua/config/diagnostics.lua
+  Find: local signs = { ... }
+  Modify icon strings
+
+
+Change a keymap:
+
+  Edit: lua/config/keymaps.lua
+  Find: buf_keymap("n", "gd", vim.lsp.buf.definition, ...)
+  Change "gd" to your preferred key
+
+
+Add custom formatter for language:
+
+  Edit: lua/config/lspconfig.lua
+  Find: languages = { ... }
+  Add:  rust = {
+          { formatCommand = "rustfmt", formatStdin = true },
+        },
+
+
+Disable a feature (e.g., virtual text diagnostics):
+
+  Edit: lua/config/diagnostics.lua
+  Find: virtual_text = true,
+  Change to: virtual_text = false,
+
+
+Add hover keymap for specific server:
+
+  Edit: lua/config/keymaps.lua
+  In the LspAttach callback, add:
+    buf_keymap("n", "gK", vim.lsp.buf.hover, "...")
+
+
+================================================================================
+LOADING ORDER (Why it matters)
+================================================================================
+
+1. diagnostics.lua  → Setup display before servers run
+2. mason.lua        → Install servers (no dependencies)
+3. lspconfig.lua    → Configure servers (depends on mason)
+4. keymaps.lua      → Register keymaps (depends on LspAttach from lspconfig)
+5. utils.lua        → Optional helpers (no dependencies)
+
+If order is wrong:
+  ✗ Keymaps registered before LSP = LspAttach never fires
+  ✗ LSP before diagnostics = errors show badly
+  ✗ Mason after lspconfig = servers not installed
+
+
+================================================================================
+DEBUGGING WITH HELPERS
+================================================================================
+
+Use helpers from lua/utils/helpers.lua:
+
+Lua Commands:
+  :lua require("utils.helpers").check_lsp_health()
+  :lua require("utils.helpers").debug_lsp()
+  :lua require("utils.helpers").show_all_diagnostics()
+  :lua require("utils.helpers").notify_info("test message")
+
+In files for testing:
+  local h = require("utils.helpers")
+  h.notify_info("Message")
+  h.check_lsp_health()
+  h.dump(some_table)
+
+================================================================================
+FILE SIZES & PERFORMANCE
+================================================================================
+
+Expected file sizes (after migration):
+  init.lua                 ~100 bytes     (very small)
+  lua/config/init.lua      ~600 bytes     (loader)
+  lua/config/diagnostics   ~500 bytes     (simple config)
+  lua/config/mason.lua     ~1000 bytes    (package manager)
+  lua/config/lspconfig.lua ~2000 bytes    (server configs)
+  lua/config/keymaps.lua   ~3500 bytes    (many keymaps)
+  lua/utils/helpers.lua    ~3000 bytes    (helper functions)
+  
+Total: ~11KB (very fast loading)
+
+Performance:
+  ✓ Startup time: < 100ms with lazy loading
+  ✓ No noticeable delay when switching files
+  ✓ LSP responds instantly to keybinds
+  ✓ Diagnostics update in real-time
+
+================================================================================
+MIGRATION NOTES
+================================================================================
+
+What you're replacing:
+  • lua/mason_config/init.lua    ✗ OLD
+  • lua/lsp_config/init.lua       ✗ OLD
+  • lua/init.lua                  ✗ OLD (print statements)
+
+With:
+  • lua/config/mason.lua         ✓ NEW (cleaner)
+  • lua/config/lspconfig.lua     ✓ NEW (organized)
+  • lua/config/keymaps.lua       ✓ NEW (centralized)
+  • lua/config/diagnostics.lua   ✓ NEW (dedicated)
+  • lua/config/init.lua          ✓ NEW (master loader)
+  • lua/utils/helpers.lua        ✓ NEW (utilities)
+  • init.lua                     ✓ UPDATED (simpler)
+
+Why this is better:
+  ✓ Clear file organization
+  ✓ Single responsibility per file
+  ✓ Easier to debug issues
+  ✓ Better follows Neovim conventions
+  ✓ Comments document what each section does
+  ✓ No scattered require() calls
+  ✓ Uses vim.* APIs (future-proof)
+
+================================================================================
+GETTING HELP
+================================================================================
+
+In Neovim:
+  :help lsp              ← LSP documentation
+  :help diagnostic       ← Diagnostic API docs
+  :help keymap           ← Keymap documentation
+
+GitHub Issues:
+  nvim-lspconfig         → github.com/neovim/nvim-lspconfig/issues
+  mason.nvim             → github.com/williamboman/mason.nvim/issues
+  lsp-format             → github.com/lukas-reineke/lsp-format.nvim/issues
+
+Reddit/Discussions:
+  r/neovim               → Neovim community
+  Neovim Discourse       → neovim.discourse.group
+
+================================================================================

@@ -1,0 +1,328 @@
+-- SETUP INSTRUCTIONS
+-- Complete guide to migrate your Neovim config to modern vim.* APIs
+
+================================================================================
+STEP-BY-STEP INSTALLATION GUIDE
+================================================================================
+
+1. BACKUP YOUR CURRENT CONFIGURATION
+   -----------------------------------
+   Before making changes, backup your existing config:
+   
+   $ cp -r ~/.config/nvim ~/.config/nvim.backup
+   
+   This allows you to revert if something goes wrong.
+
+2. CREATE NEW DIRECTORY STRUCTURE
+   --------------------------------
+   Create the following directories:
+   
+   $ mkdir -p ~/.config/nvim/lua/config
+   $ mkdir -p ~/.config/nvim/lua/utils
+   
+   Your final structure should be:
+   
+   ~/.config/nvim/
+   ├── init.lua                    ← Your main nvim entry point
+   ├── lua/
+   │   ├── config/
+   │   │   ├── init.lua            ← Config loader (new)
+   │   │   ├── mason.lua           ← Mason setup (new)
+   │   │   ├── lspconfig.lua       ← LSP setup (new)
+   │   │   ├── keymaps.lua         ← Keymaps (new)
+   │   │   └── diagnostics.lua     ← Diagnostics (new)
+   │   ├── utils/
+   │   │   └── helpers.lua         ← Helper functions (new)
+
+3. COPY THE NEW FILES
+   -------------------
+   Copy each provided Lua file to its location:
+   
+   Files provided:
+   • init_main.lua              → ~/.config/nvim/init.lua
+   • config_init.lua            → ~/.config/nvim/lua/config/init.lua
+   • config_mason.lua           → ~/.config/nvim/lua/config/mason.lua
+   • config_lspconfig.lua       → ~/.config/nvim/lua/config/lspconfig.lua
+   • config_keymaps.lua         → ~/.config/nvim/lua/config/keymaps.lua
+   • config_diagnostics.lua     → ~/.config/nvim/lua/config/diagnostics.lua
+   • utils_helpers.lua          → ~/.config/nvim/lua/utils/helpers.lua
+
+4. REPLACE YOUR init.lua
+   ----------------------
+   Your current init.lua:
+   
+   print("trying to load mason")
+   require("mason_config")
+   print('loaded mason')
+   require("lsp-format").setup {}
+   require("lsp_config")
+   
+   ✅ REPLACE with init_main.lua content
+   
+   The new init.lua is much simpler:
+   
+   vim.opt.runtimepath:append(vim.fn.stdpath("config") .. "/lua")
+   require("config.init")
+
+5. ADJUST PATHS IN config_lspconfig.lua
+   ------------------------------------
+   Find this line:
+   
+   file = "/home/tkhunlertkit/efmlog.txt",  -- Adjust path as needed
+   
+   Change it to your home directory or remove if not needed.
+
+6. TEST THE CONFIGURATION
+   ----------------------
+   Start Neovim and check for errors:
+   
+   $ nvim --headless "+q"
+   
+   Or start normally and check messages:
+   
+   $ nvim
+   
+   Then run:
+   
+   :messages           ← View startup messages
+   :LspInfo            ← Check LSP status
+   :Mason              ← Check installed servers
+
+7. VERIFY EVERYTHING WORKS
+   -------------------------
+   Test these features:
+   
+   a) Mason & Language Servers:
+      - Run :Mason to open the package manager
+      - Verify: pyright, ts_ls, lua_ls, efm are listed
+   
+   b) LSP Keymaps:
+      - Open a Python or TypeScript file
+      - Try 'gd' to go to definition
+      - Try 'K' to see hover documentation
+   
+   c) Diagnostics:
+      - Create a syntax error in any file
+      - Verify error appears with icon and underline
+      - Try '[d' and ']d' to navigate errors
+   
+   d) Formatting:
+      - Try '<leader>f' to format the file
+      - Should use black for Python, prettier for JS/TS
+
+8. TROUBLESHOOTING
+   ----------------
+   
+   Issue: "Mason is not installed"
+   Solution: Ensure mason.nvim is installed via your package manager
+   
+   Issue: Language servers not showing up in :Mason
+   Solution: Run :MasonInstall pyright ts_ls lua_ls efm
+   
+   Issue: LSP keymaps not working
+   Solution: Verify you have a language server file open
+              Run :LspInfo to check if server is attached
+   
+   Issue: Formatting doesn't work
+   Solution: Verify formatters are installed:
+            - Python: black, isort
+            - Lua: lua-format
+            - TypeScript: prettier
+
+================================================================================
+COMPARISON: OLD vs NEW
+================================================================================
+
+OLD CONFIGURATION (require-based):
+──────────────────────────────────
+
+init.lua:
+  print("trying to load mason")
+  require("mason_config")
+  require("lsp-format").setup {}
+  require("lsp_config")
+
+Problems:
+  ✗ Scattered across multiple files
+  ✗ Hard to understand loading order
+  ✗ Debug print statements
+  ✗ Mixed concerns (config + loading logic)
+  ✗ Difficult to maintain
+
+
+NEW CONFIGURATION (vim.*-based):
+─────────────────────────────────
+
+init.lua:
+  vim.opt.runtimepath:append(vim.fn.stdpath("config") .. "/lua")
+  require("config.init")
+
+config/init.lua:
+  -- All loading logic centralized with error handling
+  -- Clear loading order documented
+  -- Using vim.notify instead of print()
+  -- Each module has single responsibility
+
+Benefits:
+  ✓ Clean separation of concerns
+  ✓ Clear loading order
+  ✓ Better error handling
+  ✓ Easier to debug
+  ✓ Follows Neovim conventions
+  ✓ More maintainable long-term
+
+================================================================================
+KEY DIFFERENCES EXPLAINED
+================================================================================
+
+1. LOADING PATTERN
+   ────────────────
+   OLD:
+     require("module_name")          ← Just load it, unclear when
+   
+   NEW:
+     require("config.init")           ← Single entry point
+     which loads in specific order:
+       1. diagnostics
+       2. mason
+       3. lspconfig
+       4. keymaps
+       5. utils
+   
+   This order is critical! LSP must be setup before keymaps.
+
+2. ERROR HANDLING
+   ───────────────
+   OLD:
+     require("something") → Crashes if module doesn't exist
+   
+   NEW:
+     safe_require(module) → Returns nil and notifies user
+   
+   The safe_require function prevents crashes.
+
+3. USER FEEDBACK
+   ──────────────
+   OLD:
+     print("loaded mason")            ← Goes to Neovim console
+   
+   NEW:
+     vim.notify("✓ Mason configured") ← Shows in notification area
+                                        Appears at bottom right
+
+4. MODULAR STRUCTURE
+   ──────────────────
+   OLD:
+     All settings in one big file
+     Hard to find specific settings
+   
+   NEW:
+     config/
+       ├── mason.lua          ← Only mason settings
+       ├── lspconfig.lua      ← Only LSP settings
+       ├── keymaps.lua        ← Only keymaps
+       └── diagnostics.lua    ← Only diagnostics
+   
+   Much easier to navigate!
+
+================================================================================
+CUSTOMIZATION EXAMPLES
+================================================================================
+
+Example 1: Add a new language server (Go)
+──────────────────────────────────────────
+File: lua/config/mason.lua
+Find: ensure_installed = { "pyright", "ts_ls", "lua_ls", "efm" }
+Add:  "gopls"
+
+File: lua/config/lspconfig.lua
+Add:  lspconfig.gopls.setup({
+        on_attach = on_attach_default,
+      })
+
+
+Example 2: Change diagnostic display
+──────────────────────────────────────
+File: lua/config/diagnostics.lua
+Modify the icons table:
+
+local signs = {
+  Error = "E",   ← Change from "❌"
+  Warn = "W",    ← Change from "⚠️"
+  Hint = "H",    ← Change from "💡"
+  Info = "I",    ← Change from "ℹ️"
+}
+
+
+Example 3: Change keymaps
+────────────────────────────
+File: lua/config/keymaps.lua
+Find: buf_keymap("n", "gd", vim.lsp.buf.definition, "Go to definition")
+Change "gd" to your preferred key, e.g., "gd" → "gD"
+
+
+Example 4: Add custom formatting for new language
+────────────────────────────────────────────────────
+File: lua/config/lspconfig.lua
+Find: languages = { ... }
+Add:
+
+rust = {
+  { formatCommand = "rustfmt", formatStdin = true },
+},
+
+================================================================================
+MIGRATION CHECKLIST
+================================================================================
+
+Before migration:
+  ☐ Backup your current nvim config to ~/.config/nvim.backup
+  ☐ Ensure all plugins are installed (mason, lspconfig, lsp-format)
+  ☐ Note any custom settings you want to preserve
+
+During migration:
+  ☐ Create directory structure (lua/config, lua/utils)
+  ☐ Copy all 7 Lua files to correct locations
+  ☐ Replace init.lua with new version
+  ☐ Adjust paths (especially efmlog.txt path)
+  ☐ Test with: nvim --headless "+q"
+
+After migration:
+  ☐ Check :messages for errors
+  ☐ Verify :LspInfo shows expected servers
+  ☐ Test keymaps in each language file
+  ☐ Confirm formatting works (<leader>f)
+  ☐ Test diagnostic navigation ([d, ]d)
+  ☐ Verify all your previous customizations work
+
+If something breaks:
+  ☐ Check error messages: :messages
+  ☐ Try restarting Neovim
+  ☐ Run :checkhealth
+  ☐ Check plugin installation: :Mason
+  ☐ Restore from backup if needed: cp -r ~/.config/nvim.backup ~/.config/nvim
+
+================================================================================
+SUPPORT & REFERENCES
+================================================================================
+
+Official Documentation:
+  • Neovim LSP: https://neovim.io/doc/user/lsp.html
+  • vim.diagnostic: :help vim.diagnostic
+  • vim.lsp: :help vim.lsp
+  • vim.keymap: :help vim.keymap.set()
+
+Plugin Repositories:
+  • lspconfig: https://github.com/neovim/nvim-lspconfig
+  • mason.nvim: https://github.com/williamboman/mason.nvim
+  • lsp-format: https://github.com/lukas-reineke/lsp-format.nvim
+
+In-Editor Help:
+  :LspInfo               ← View active LSP clients
+  :LspRestart            ← Restart all LSP servers
+  :Mason                 ← Open package manager
+  :checkhealth           ← Check plugin health
+  :messages              ← View recent messages
+  :help lsp              ← LSP documentation
+
+================================================================================
