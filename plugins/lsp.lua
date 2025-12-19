@@ -95,6 +95,26 @@ return {
       -- Bash Language Server
       lspconfig.bashls.setup({})
 
+      -- SQL Language Server
+      lspconfig.sqlls.setup({
+        settings = {
+          sqlls = {
+            connections = {
+              -- Configure your database connections here if needed
+              -- Example:
+              -- {
+              --   name = "local",
+              --   driver = "postgres",
+              --   server = "localhost",
+              --   port = 5432,
+              --   user = "user",
+              --   database = "mydb",
+              -- }
+            },
+          },
+        },
+      })
+
       -- HTML/CSS Language Server
       lspconfig.html.setup({})
       lspconfig.cssls.setup({})
@@ -115,6 +135,7 @@ return {
         "gopls",
         "rust_analyzer",
         "bashls",
+        "sqlls",
         "html",
         "cssls",
       }
