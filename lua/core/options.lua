@@ -65,3 +65,6 @@ opt.pumheight = 10                   -- Completion menu height
 opt.backup = false                   -- Don't create backup files
 opt.swapfile = false                 -- Don't create swap files
 opt.writebackup = false              -- Don't backup when overwriting
+
+-- Statusline - ensure it's always visible at bottom
+opt.laststatus = 2                   -- Always show statusline (2 = always visible)
