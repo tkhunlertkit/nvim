@@ -165,19 +165,6 @@ return {
     end,
   },
 
-  -- Markdown preview
-  {
-    "iamcco/markdown-preview.nvim",
-    build = "cd app && npm install",
-    ft = "markdown",
-    config = function()
-      vim.g.mkdp_auto_start = 0
-      vim.g.mkdp_auto_close = 1
-      vim.g.mkdp_refresh_slow = 0
-      vim.g.mkdp_command_for_global = 0
-    end,
-  },
-
   -- Oil (file explorer as a buffer)
   {
     "stevearc/oil.nvim",
@@ -228,11 +215,7 @@ return {
     "gbprod/substitute.nvim",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-      require("substitute").setup()
-      vim.keymap.set("n", "s", require("substitute").operator, { noremap = true })
-      vim.keymap.set("n", "ss", require("substitute").line, { noremap = true })
-      vim.keymap.set("n", "S", require("substitute").eol_operator, { noremap = true })
-      vim.keymap.set("x", "s", require("substitute").visual, { noremap = true })
+      require("substitute").setup({})
     end,
   },
 

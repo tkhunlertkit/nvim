@@ -23,14 +23,14 @@ require("lazy").setup({
   spec = {
     { import = "plugins.lsp" },
     { import = "plugins.cmp" },
-    { import = "plugins.treesitter" },
+--  { import = "plugins.treesitter" },
     { import = "plugins.telescope" },
     { import = "plugins.ui" },
     { import = "plugins.editor" },
-    { import = "plugins.others" },
+--    { import = "plugins.others" },
   },
   install = {
-    colorscheme = { "tokyonight", "gruvbox" },
+    colorscheme = { "nord" },
   },
   checker = {
     enabled = true,

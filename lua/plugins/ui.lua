@@ -8,13 +8,6 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
-      require("nord").setup({
-        contrast = false,
-        borders = true,
-        errors = {
-          mode = "background",
-        },
-      })
       vim.cmd.colorscheme("nord")
     end,
   },
@@ -85,8 +78,7 @@ return {
     main = "ibl",
     config = function()
       require("ibl").setup({
-        indent = { char = "│", highlight = "IblChar" },
-        whitespace = { highlight = "IblWhitespace" },
+        indent = { char = "│"},
         scope = { enabled = true, show_start = true, show_end = true },
       })
     end,
