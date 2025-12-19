@@ -1,170 +1,401 @@
-# Modern Neovim Configuration Installation Guide
+# nvim-config
 
-This repository contains a modular, modern Lua configuration for Neovim, utilizing `vim.*` APIs instead of the traditional `require` calls. It is designed to be clean, maintainable, and easy to debug.
+Modern Neovim configuration for **Neovim v0.11.5+**, built with Lua and best practices. No deprecated `:lua require(...)` in mappings or commands. All configuration uses Lua modules, `vim.keymap.set` callbacks, and lazy.nvim for efficient plugin management.
 
-## 📋 Prerequisites
+## Features
 
-Before installing, ensure you have the following:
+✨ **Core Features:**
+- Lua-based configuration with `init.lua` and structured `lua/` directory
+- **lazy.nvim** for fast startup and lazy-loading plugins
+- Modern keymaps using `vim.keymap.set` with Lua callbacks (Neovim 0.11.5 compatible)
+- LSP (Language Server Protocol) configuration for multiple languages
+- Treesitter for syntax highlighting, indentation, and text objects
+- nvim-cmp for smart autocompletion with snippets
+- Telescope for fuzzy finding files, text, and more
+- NvimTree for file exploration
+- Multiple LSP servers configured (Lua, Python, TypeScript, Go, Rust, and more)
 
-- **Neovim >= 0.9.0** (Required for modern API support)
-- **Nerd Font** (Optional, but recommended for icons)
-- **Plugin Manager** (e.g., [lazy.nvim](https://github.com/folke/lazy.nvim) or [packer.nvim](https://github.com/wbthomason/packer.nvim))
-  > **Note**: This configuration assumes you have the following plugins installed via your plugin manager:
-  > - `williamboman/mason.nvim`
-  > - `williamboman/mason-lspconfig.nvim`
-  > - `neovim/nvim-lspconfig`
-  > - `lukas-reineke/lsp-format.nvim`
+📦 **Plugin Highlights:**
+- **LSP**: nvim-lspconfig with 10+ language servers pre-configured
+- **Completion**: nvim-cmp with LuaSnip snippets and LSP integration
+- **UI**: Tokyo Night colorscheme, lualine statusline, bufferline, indent guides, noice
+- **Editor**: Comment.nvim, nvim-surround, Auto-pairs, which-key
+- **Git**: Gitsigns, vim-fugitive, vim-rhubarb
+- **Fuzzy Finder**: Telescope with fzf-native, ui-select, and live-grep-args
+- **Quality of Life**: Trouble diagnostics, Todo-comments, Gitsigns, Undotree, Dashboard
 
-## 📂 Repository Structure
+## Directory Structure
 
-The configuration is organized into a modular structure where every file has a single responsibility.
+```
+~/.config/nvim
+├── init.lua
+├── lua
+│   ├── core
+│   │   ├── init.lua
+│   │   ├── options.lua        # Global settings (indentation, display, etc.)
+│   │   ├── keymaps.lua        # Keybindings (using vim.keymap.set)
+│   │   └── autocmds.lua       # Autocommands
+│   ├── plugins
+│   │   ├── init.lua           # lazy.nvim bootstrap and plugin specs
+│   │   ├── lsp.lua            # LSP configuration
+│   │   ├── cmp.lua            # Completion (nvim-cmp)
+│   │   ├── treesitter.lua     # Treesitter setup
+│   │   ├── telescope.lua      # Fuzzy finder
+│   │   ├── ui.lua             # UI plugins (colorscheme, statusline, etc.)
+│   │   ├── editor.lua         # Editor enhancements (file explorer, comments, etc.)
+│   │   └── others.lua         # Additional plugins
+│   └── utils
+│       └── init.lua           # Helper functions (optional)
+└── README.md
 
-```text
-nvim/
-├── init.lua                  # 🚀 Main entry point (minimal)
-└── lua/
-    ├── config/
-    │   ├── init.lua          # ⚙️  Master loader (handles loading order)
-    │   ├── diagnostics.lua   # 🔍 Diagnostic display configuration
-    │   ├── keymaps.lua       # ⌨️  LSP and global keybindings
-    │   ├── lspconfig.lua     # 🧠 Language server configurations (Pyright, Lua, etc.)
-    │   └── mason.lua         # 📦 Mason package manager setup
-    └── utils/
-        └── helpers.lua       # 🛠️  Utility functions for debugging & notifications
 ```
 
----
+## Prerequisites
 
-## 🚀 Installation Procedure
+Before installing this config, ensure you have the following installed:
 
-Follow these steps to install this configuration on your machine.
+### Required:
+- **Neovim v0.11.5 or newer**
+  - Install from your package manager (apt, brew, pacman, etc.) or build from source
+  - Verify: `nvim --version`
+- **Git** (for cloning this repo and lazy.nvim bootstrap)
+- **Build tools** (for compiling Treesitter parsers and some plugins):
+  - Linux: `build-essential` (Debian/Ubuntu) or `base-devel` (Arch)
+  - macOS: Xcode Command Line Tools (`xcode-select --install`)
+  - Windows: MSVC or MinGW
 
-### Step 1: Backup Your Existing Configuration
-**Critical Step:** If you have an existing Neovim configuration, move it to a backup location to prevent conflicts or data loss.
+### Strongly Recommended:
+- **Node.js 16+** (for TypeScript/JavaScript LSP and some plugins)
+  - Install via nvm, fnm, or your package manager
+- **Python 3** with pip
+  - Install pynvim: `pip install --user pynvim`
+- **Compiler for your languages** (gcc, clang, etc.)
+
+### Optional but Useful:
+- **ripgrep** (`rg`) - for Telescope live grep performance
+- **fd** - for faster file finding in Telescope
+- **Language-specific tools**:
+  - **Python**: pyright or pylsp
+  - **Go**: gopls
+  - **Rust**: rust-analyzer
+  - **TypeScript/JavaScript**: typescript-language-server, typescript
+  - **Lua**: lua-language-server
+  - **Bash**: bash-language-server
+
+## Installation
+
+### Step 1: Backup/Remove Existing Config
+
+If you have an existing Neovim config, back it up first:
 
 ```bash
-# Linux / macOS
-mv ~/.config/nvim ~/.config/nvim.backup
-
-# Windows (PowerShell)
-Rename-Item -Path $env:LOCALAPPDATA\nvim -NewName nvim.backup
+mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null || true
+mv ~/.local/share/nvim ~/.local/share/nvim.bak 2>/dev/null || true
+mv ~/.cache/nvim ~/.cache/nvim.bak 2>/dev/null || true
 ```
 
-### Step 2: Clone the Repository
-Clone this repository directly into your Neovim configuration directory.
+### Step 2: Clone This Repository
 
 ```bash
-# Linux / macOS
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git ~/.config/nvim
-
-# Windows (PowerShell)
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git $env:LOCALAPPDATA\nvim
+git clone https://github.com/<your-username>/nvim-config.git ~/.config/nvim
 ```
 
-### Step 3: Install Plugins
-Open Neovim. You may see errors initially because plugins are not yet installed. This is normal.
+Replace `<your-username>` with your GitHub username or organization.
 
-1. Open Neovim:
-   ```bash
-   nvim
-   ```
-2. Run your plugin manager's install command.
-   - For **Lazy.nvim**: `:Lazy sync`
-   - For **Packer**: `:PackerSync`
+### Step 3: Install System Dependencies
 
-### Step 4: Configure Local Paths (Important!)
-The configuration includes a logging path for the EFM language server that needs to match your system.
+#### Linux (Ubuntu/Debian):
+```bash
+sudo apt update
+sudo apt install -y git curl build-essential nodejs npm python3 python3-pip ripgrep fd-find
+pip install --user pynvim
+```
 
-1. Open the LSP configuration file:
-   ```bash
-   nvim lua/config/lspconfig.lua
-   ```
-2. Find the line defining the log file path (around line ~90):
-   ```lua
-   -- Find this line:
-   logFile = "/home/tkhunlertkit/efmlog.txt",
+#### Linux (Arch):
+```bash
+sudo pacman -S base-devel git curl nodejs npm python python-pip ripgrep fd
+pip install --user pynvim
+```
 
-   -- Change it to your own home directory path:
-   logFile = "/home/YOUR_USERNAME/efmlog.txt",
-   ```
-3. Save and quit (`:wq`).
+#### macOS:
+```bash
+# Install Homebrew if needed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-### Step 5: Verify Installation
-Restart Neovim and run the verification command to ensure everything loaded correctly.
+brew install neovim git node python ripgrep fd
+pip3 install --user pynvim
+```
+
+#### Windows (with Scoop or Chocolatey):
+
+**Using Scoop:**
+```powershell
+scoop install neovim git nodejs python ripgrep fd
+pip install --user pynvim
+```
+
+**Using Chocolatey:**
+```powershell
+choco install neovim git nodejs python ripgrep fd
+pip install --user pynvim
+```
+
+### Step 4: Install Language Servers (Optional but Recommended)
+
+Choose which language servers to install based on your needs:
+
+```bash
+# Lua
+sudo npm install -g lua-language-server
+
+# Python (Pyright)
+pip install --user pyright
+
+# TypeScript/JavaScript
+sudo npm install -g typescript-language-server typescript
+
+# Go
+go install github.com/golang/tools/gopls@latest
+
+# Rust (if you have Rust installed)
+rustup component add rust-analyzer
+
+# Bash
+sudo npm install -g bash-language-server
+
+# JSON/YAML - already configured with nvim-lspconfig
+```
+
+### Step 5: First Neovim Start
+
+Open Neovim:
+
+```bash
+nvim
+```
+
+**On first startup:**
+1. lazy.nvim will automatically clone itself into `~/.local/share/nvim/lazy/lazy.nvim`
+2. Plugin specs from `lua/plugins/` will be loaded
+3. Plugins will be installed automatically
+4. Wait for the installation to complete (you'll see a dashboard or installer UI)
+5. Exit and restart Neovim
+
+```bash
+:q
+nvim
+```
+
+### Step 6: Verify Everything Works
+
+Inside Neovim, run:
 
 ```vim
-:messages
+:checkhealth
+:checkhealth vim.deprecated
 ```
 
-You should see a clean startup log similar to:
-```text
-🔧 Initializing Neovim configuration...
-✓ Diagnostics configured
-✓ Mason configured
-✓ LSP configured
-✓ Keymaps configured
-✅ Configuration loaded successfully!
+Fix any reported issues:
+- Missing executables: Install the required tools
+- LSP not found: Install the corresponding language server
+- Treesitter parser missing: Run `:TSUpdate` to install them
+
+Install Treesitter parsers:
+
+```vim
+:TSUpdate
 ```
 
----
+## Common Keybindings
 
-## 📖 Module Descriptions
+### General Navigation
+| Key | Action |
+|-----|--------|
+| `<C-h>` | Window left |
+| `<C-j>` | Window down |
+| `<C-k>` | Window up |
+| `<C-l>` | Window right |
+| `<A-j>` / `<A-k>` | Move line up/down |
+| `<` / `>` (visual) | Indent left/right |
 
-Here is a detailed breakdown of what each file in this package does.
+### Leader Key Mappings (Space)
+| Key | Action |
+|-----|--------|
+| `<leader>w` | Save file |
+| `<leader>q` | Quit |
+| `<leader>Q` | Quit all |
+| `<leader>nh` | Clear search highlights |
+| `<leader>e` | Toggle file explorer (NvimTree) |
 
-### 1. `init.lua`
-The simplified entry point. It strictly handles adding the Lua directory to the runtime path and requiring the main config loader.
+### Telescope (Fuzzy Finder)
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep (search text) |
+| `<leader>fb` | Find buffers |
+| `<leader>fh` | Find help tags |
+| `<leader>fr` | Find recent files |
+| `<leader>/` | Search current buffer |
+
+### LSP Keybindings
+| Key | Action |
+|-----|--------|
+| `K` | Hover documentation |
+| `gd` | Go to definition |
+| `gi` | Go to implementation |
+| `gr` | Go to references |
+| `<leader>rn` | Rename symbol |
+| `<leader>ca` | Code actions |
+| `<leader>d` | Show diagnostics |
+| `[d` / `]d` | Navigate diagnostics |
+
+### Comments
+| Key | Action |
+|-----|--------|
+| `gcc` | Toggle line comment |
+| `gbc` | Toggle block comment |
+| `gc` (visual) | Toggle comment on selection |
+
+### Editor
+| Key | Action |
+|-----|--------|
+| `<leader>xx` | Toggle Trouble (diagnostics) |
+| `<leader>u` | Toggle Undotree |
+| `ys` | Surround (with nvim-surround) |
+
+## Customization
+
+### Add/Remove Plugins
+Edit the corresponding file in `lua/plugins/` or `lua/plugins/init.lua`:
+
 ```lua
--- Only essential loading logic
-vim.opt.runtimepath:append(vim.fn.stdpath("config") .. "/lua")
-require("config.init")
+-- In lua/plugins/others.lua
+return {
+  {
+    "plugin-name/plugin",
+    event = "BufEnter",
+    config = function()
+      require("plugin").setup({
+        -- your config
+      })
+    end,
+  },
+}
 ```
 
-### 2. `lua/config/init.lua`
-The **Master Loader**. It replaces the old "require everything at top level" approach.
-- **Function**: Defines a `safe_require` utility to prevent Neovim from crashing if a module fails.
-- **Order**: Enforces a strict loading sequence (Diagnostics -> Mason -> LSP -> Keymaps).
-- **Feedback**: Uses `vim.notify` to provide visual startup status.
+### Modify Keybindings
+Edit `lua/core/keymaps.lua`:
 
-### 3. `lua/config/mason.lua`
-Handles the **Mason** package manager integration.
-- Configures the UI icons (✓, ➜, ✗).
-- Sets up `mason-lspconfig` to automatically install servers (`pyright`, `ts_ls`, `lua_ls`, `efm`) if they are missing.
-- **Customization**: Add new servers to the `ensure_installed` table here.
+```lua
+map("n", "<leader>custom", function()
+  vim.notify("Custom keymap!")
+end, opts)
+```
 
-### 4. `lua/config/lspconfig.lua`
-The core **Language Server Protocol** configuration.
-- **Servers**: specific setup for Python (Pyright), JS/TS (ts_ls), and Lua.
-- **EFM Integration**: Configures external formatters like `black`, `isort`, and `prettier`.
-- **Capabilities**: Enables modern completion capabilities for `cmp` (if used).
+### Change Settings
+Edit `lua/core/options.lua`:
 
-### 5. `lua/config/keymaps.lua`
-Centralized **Keybindings**.
-- **Global**: Diagnostics navigation (`[d`, `]d`, `<leader>e`).
-- **LSP-Specific**: Uses an `LspAttach` autocommand to only create keymaps (like `gd`, `gr`, `K`) when a language server actually connects to the buffer.
-- **Docs**: Includes comments explaining every keymap.
+```lua
+opt.number = true
+opt.tabstop = 2  -- Change tab width
+```
 
-### 6. `lua/config/diagnostics.lua`
-Visual settings for **Errors and Warnings**.
-- Configures virtual text (the error text next to code).
-- Defines custom signs (Error = ❌, Warn = ⚠️).
-- Sets update behavior (e.g., don't update while typing in insert mode).
+### Add Language Servers
+Edit `lua/plugins/lsp.lua` and add a new server:
+
+```lua
+lspconfig.your_server.setup({
+  settings = {
+    -- server-specific settings
+  },
+})
+```
+
+## Updating
+
+Pull the latest changes:
+
+```bash
+cd ~/.config/nvim
+git pull
+nvim
+```
+
+Then update plugins:
+
+```vim
+:Lazy sync
+```
+
+## Troubleshooting
+
+### Plugins not loading
+```vim
+:Lazy
+" Check if plugins are properly installed
+" Use 'i' in the Lazy UI to install missing plugins
+```
+
+### Missing language server
+```vim
+:LspInfo
+" Shows which LSP servers are available/running
+" Install the language server manually if missing
+```
+
+### Treesitter parser issues
+```vim
+:TSUpdate
+:checkhealth nvim-treesitter
+```
+
+### Check for deprecated APIs
+```vim
+:checkhealth vim.deprecated
+" Fix any warnings reported
+```
+
+### Clear cache and reinstall
+```bash
+rm -rf ~/.local/share/nvim/lazy
+rm -rf ~/.cache/nvim
+nvim
+" lazy.nvim will reinstall all plugins on next start
+```
+
+## Neovim 0.11 Migration Notes
+
+This config avoids deprecated patterns from older Neovim versions:
+
+✅ **What changed:**
+- All user commands and keymaps use `vim.keymap.set()` with Lua callbacks (not `:lua require()`)
+- LSP configuration uses modern nvim-lspconfig patterns
+- No use of deprecated diagnostic functions or sign_define patterns
+- All plugins are configured through their Lua modules
+
+✅ **Best practices applied:**
+- Plugin specs in `lua/plugins/` with proper `event`, `cmd`, `ft` lazy-loading
+- LSP capabilities properly merged with cmp_nvim_lsp
+- Snippet integration with LuaSnip
+- Proper use of keymaps with buffer-local options where needed
+
+## License
+
+This configuration is provided as-is. Feel free to modify and distribute as you wish.
+
+## Credits
+
+- **Neovim**: https://neovim.io
+- **lazy.nvim**: https://github.com/folke/lazy.nvim
+- **nvim-lspconfig**: https://github.com/neovim/nvim-lspconfig
+- **All plugin authors** listed in the plugin specifications
+
+## Contributing
+
+Feel free to fork, modify, and improve this configuration. If you find issues or have suggestions, consider opening an issue or PR in your fork.
 
 ---
 
-## 🛠️ Troubleshooting
-
-**Issue: "Module 'mason' not found"**
-- **Cause**: You haven't installed the plugins yet.
-- **Fix**: Run your plugin manager's install command (`:Lazy install` or `:PackerInstall`).
-
-**Issue: Formatting (`<leader>f`) doesn't work**
-- **Cause**: The external formatter (e.g., `black` for Python) isn't installed on your system.
-- **Fix**: Install the tool manually or via Mason.
-  ```vim
-  :MasonInstall black prettier
-  ```
-
-**Issue: LSP Errors in `lspconfig.lua`**
-- **Cause**: You likely forgot to update the `efmlog.txt` path in Step 4.
-- **Fix**: Edit `lua/config/lspconfig.lua` and set a valid path.
+**Last updated**: December 19, 2025
+**Neovim version**: 0.11.5+
+**Lua version**: 5.1+
