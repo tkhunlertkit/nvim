@@ -1,1 +1,33 @@
+# Neovim Config .gitignore
+# Keep only source files, exclude generated/cache
+
+# Plugin directories (auto-installed by lazy.nvim)
+/lazy/
+
+# Packer
+/plugin/packer_compiled.lua
+/plugin/packer_compiled.lua.bak
+
+# Undo directory
+/undo/
+
+# Local session files
+session.vim
+.netrwhist
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
+*.swp
+*.swo
+*~
+.directory
+
+# Lua cache (optional)
+*.luac
+
+# Backup files
+*.bak
