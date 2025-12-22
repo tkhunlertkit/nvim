@@ -4,7 +4,7 @@
 return {
   -- Nord Colorscheme
   {
-    "shaunsingh/nord.nvim",
+    "arcticicestudio/nord-vim",
     lazy = false,
     priority = 1000,
     config = function()
