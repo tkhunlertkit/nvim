@@ -10,6 +10,7 @@ return {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-ui-select.nvim",
       "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-treesitter/nvim-treesitter",
     },
     cmd = "Telescope",
     config = function()

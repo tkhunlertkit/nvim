@@ -2,6 +2,8 @@
 -- LSP (Language Server Protocol) configuration
 -- Compatible with Neovim 0.11.5+
 
+vim.env.NVIM_SUPPRESS_LSPCONFIG_DEPRECATION = "1"
+
 return {
   {
     "neovim/nvim-lspconfig",
