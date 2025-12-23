@@ -19,6 +19,7 @@ return {
 
       telescope.setup({
         defaults = {
+          previewer = false,
           prompt_prefix = "🔍 ",
           selection_caret = "❯ ",
           path_display = { "truncate" },

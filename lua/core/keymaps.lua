@@ -27,6 +27,16 @@ map("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 map("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
 map("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
 
+
+-- Increase width by 5
+map("n", "<leader>.", "<cmd>vertical resize +5<cr>", opts)
+-- Decrease width by 5
+map("n", "<leader>,", "<cmd>vertical resize -5<cr>", opts)
+-- Increase height by 5
+map("n", "<leader>=", "<cmd>resize +5<cr>", opts)
+-- Decrease height by 5
+map("n", "<leader>-", "<cmd>resize -5<cr>", opts)
+
 -- ============================================================================
 -- Leader Key Bindings
 -- ============================================================================
@@ -36,8 +46,8 @@ map("n", "<leader>w", ":w<CR>", opts)
 map("n", "<leader>q", ":q<CR>", opts)
 map("n", "<leader>Q", ":qa<CR>", opts)
 
--- Clear highlights
-map("n", "<leader>nh", ":nohlsearch<CR>", opts)
+-- map("v", "<leader>/", function()
+map("n", "<Esc><Esc>", ":nohlsearch<CR>", opts)
 
 -- Better paste (don't overwrite paste buffer)
 map("v", "p", '"_dP', opts)
@@ -73,10 +83,10 @@ map("n", "<leader>fc", function()
   require("telescope.builtin").commands()
 end, opts)
 
-map("n", "<leader>/", function()
-  require("telescope.builtin").current_buffer_fuzzy_find()
-end, opts)
-
+-- map("n", "<leader>/", function()
+--   require("telescope.builtin").current_buffer_fuzzy_find()
+-- end, opts)
+--
 -- ============================================================================
 -- NvimTree (File Explorer)
 -- ============================================================================
@@ -155,10 +165,12 @@ end
 -- Comment (Comment.nvim)
 -- ============================================================================
 
-map("n", "<leader>/", function()
+map("n", "<leader>c<leader>", function()
   require("Comment.api").toggle.linewise.current()
-end, { noremap = true, silent = true })
+end, opts)
 
-map("v", "<leader>/", function()
+map("x", "<leader>c<leader>", function()
+  local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+  vim.api.nvim_feedkeys(esc, "nx", false)
   require("Comment.api").toggle.linewise(vim.fn.visualmode())
-end, { noremap = true, silent = true })
+end, opts)

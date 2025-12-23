@@ -4,10 +4,12 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "master",
+    lazy = false,
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-      require("nvim-treesitter.configs").setup({
+      require("nvim-treesitter").setup({
         -- Install parsers synchronously (only applied to `ensure_installed`)
         sync_install = false,
 
@@ -16,26 +18,26 @@ return {
 
         -- List of parsers to install
         ensure_installed = {
-          "lua",
-          "vim",
-          "vimdoc",
-          "python",
-          "javascript",
-          "typescript",
-          "tsx",
-          "json",
-          "yaml",
-          "html",
-          "css",
           "bash",
-          "markdown",
-          "markdown_inline",
-          "regex",
-          "sql",
-          "go",
-          "rust",
           "c",
           "cpp",
+          "css",
+          "go",
+          "html",
+          "javascript",
+          "json",
+          "lua",
+          "markdown",
+          "markdown_inline",
+          "python",
+          "regex",
+          "rust",
+          "sql",
+          "tsx",
+          "typescript",
+          "vim",
+          "vimdoc",
+          "yaml",
         },
 
         -- Highlighting configuration
