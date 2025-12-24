@@ -31,6 +31,8 @@ require("lazy").setup({
 		{ import = "plugins.conform" },
 		{ import = "plugins.fidget" },
 		{ import = "plugins.schemastore" },
+		{ import = "plugins.which-key" },
+		{ import = "plugins.obsession" },
 	},
 	install = {
 		colorscheme = { "nord" },

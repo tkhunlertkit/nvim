@@ -18,6 +18,13 @@ return {
 		event = "VimEnter",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
+			local function obsession_status()
+				if vim.g.obsession_active == 1 then
+					return "●" -- tracking
+				else
+					return "○" -- not tracking
+				end
+			end
 			require("lualine").setup({
 				options = {
 					theme = "auto",
@@ -31,7 +38,7 @@ return {
 					lualine_a = { "mode" },
 					lualine_b = { "branch", "diff", "diagnostics" },
 					lualine_c = { "filename" },
-					lualine_x = { "encoding", "fileformat", "filetype" },
+					lualine_x = { obsession_status, "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },
 					lualine_z = { "location" },
 				},

@@ -27,15 +27,16 @@ map("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 map("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
 map("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
 
-
 -- Increase width by 5
 map("n", "<leader>.", "<cmd>vertical resize +5<cr>", opts)
 -- Decrease width by 5
 map("n", "<leader>,", "<cmd>vertical resize -5<cr>", opts)
 -- Increase height by 5
-map("n", "<leader>=", "<cmd>resize +5<cr>", opts)
+map("n", "<leader>v", "<cmd>resize +5<cr>", opts)
 -- Decrease height by 5
-map("n", "<leader>-", "<cmd>resize -5<cr>", opts)
+map("n", "<leader>c", "<cmd>resize -5<cr>", opts)
+-- Equalize all window panes
+map("n", "<leader>=", "<C-w>=", opts)
 
 -- ============================================================================
 -- Leader Key Bindings
@@ -46,7 +47,6 @@ map("n", "<leader>w", ":w<CR>", opts)
 map("n", "<leader>q", ":q<CR>", opts)
 map("n", "<leader>Q", ":qa<CR>", opts)
 
--- map("v", "<leader>/", function()
 map("n", "<Esc><Esc>", ":nohlsearch<CR>", opts)
 
 -- Better paste (don't overwrite paste buffer)
@@ -60,27 +60,27 @@ map("n", "Y", "y$", opts)
 -- ============================================================================
 
 map("n", "<leader>ff", function()
-  require("telescope.builtin").find_files()
+	require("telescope.builtin").find_files()
 end, opts)
 
 map("n", "<leader>fg", function()
-  require("telescope.builtin").live_grep()
+	require("telescope.builtin").live_grep()
 end, opts)
 
 map("n", "<leader>fb", function()
-  require("telescope.builtin").buffers()
+	require("telescope.builtin").buffers()
 end, opts)
 
 map("n", "<leader>fh", function()
-  require("telescope.builtin").help_tags()
+	require("telescope.builtin").help_tags()
 end, opts)
 
 map("n", "<leader>fr", function()
-  require("telescope.builtin").oldfiles()
+	require("telescope.builtin").oldfiles()
 end, opts)
 
 map("n", "<leader>fc", function()
-  require("telescope.builtin").commands()
+	require("telescope.builtin").commands()
 end, opts)
 
 -- map("n", "<leader>/", function()
@@ -92,7 +92,7 @@ end, opts)
 -- ============================================================================
 
 map("n", "<leader>e", function()
-  require("nvim-tree.api").tree.toggle()
+	require("nvim-tree.api").tree.toggle()
 end, opts)
 
 -- ============================================================================
@@ -101,57 +101,57 @@ end, opts)
 
 -- LSP hover documentation
 map("n", "K", function()
-  vim.lsp.buf.hover()
+	vim.lsp.buf.hover()
 end, opts)
 
 -- Go to definition
 map("n", "gd", function()
-  vim.lsp.buf.definition()
+	vim.lsp.buf.definition()
 end, opts)
 
 -- Go to implementation
 map("n", "gi", function()
-  vim.lsp.buf.implementation()
+	vim.lsp.buf.implementation()
 end, opts)
 
 -- Go to references
 map("n", "gr", function()
-  vim.lsp.buf.references()
+	vim.lsp.buf.references()
 end, opts)
 
 -- Rename symbol
 map("n", "<leader>rn", function()
-  vim.lsp.buf.rename()
+	vim.lsp.buf.rename()
 end, opts)
 
 -- Code actions
 map("n", "<leader>ca", function()
-  vim.lsp.buf.code_action()
+	vim.lsp.buf.code_action()
 end, opts)
 
 map("v", "<leader>ca", function()
-  vim.lsp.buf.code_action()
+	vim.lsp.buf.code_action()
 end, opts)
 
 -- Show diagnostics
 map("n", "<leader>d", function()
-  vim.diagnostic.open_float()
+	vim.diagnostic.open_float()
 end, opts)
 
 -- Navigate diagnostics
 map("n", "[d", function()
-  vim.diagnostic.goto_prev()
+	vim.diagnostic.goto_prev()
 end, opts)
 
 map("n", "]d", function()
-  vim.diagnostic.goto_next()
+	vim.diagnostic.goto_next()
 end, opts)
 
 -- Set diagnostic signs
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
 -- ============================================================================
@@ -166,11 +166,19 @@ end
 -- ============================================================================
 
 map("n", "<leader>c<leader>", function()
-  require("Comment.api").toggle.linewise.current()
+	require("Comment.api").toggle.linewise.current()
 end, opts)
 
 map("x", "<leader>c<leader>", function()
-  local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-  vim.api.nvim_feedkeys(esc, "nx", false)
-  require("Comment.api").toggle.linewise(vim.fn.visualmode())
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.linewise(vim.fn.visualmode())
 end, opts)
+
+-- ============================================================================
+-- Obsession
+-- ============================================================================
+-- Toggle Obsession tracking
+map("n", "<leader>sp", "<cmd>Obsession<cr>", opts)
+-- Quickly source Session.vim in current dir
+map("n", "<leader>ss", "<cmd>source Session.vim<cr>", opts)

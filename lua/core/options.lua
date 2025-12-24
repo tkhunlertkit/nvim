@@ -8,6 +8,9 @@ local g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
+-- Disable Space as a motion in NORMAL mode
+vim.keymap.set("n", "<Space>", "<Nop>", { noremap = true, silent = true })
+
 -- General settings
 opt.number = true -- Show line numbers
 opt.relativenumber = true -- Relative line numbers
@@ -69,3 +72,12 @@ opt.writebackup = false -- Don't backup when overwriting
 -- Statusline - ensure it's always visible at bottom
 opt.laststatus = 2 -- Always show statusline (2 = always visible)
 
+-- Save buffers, window sizes, tabpages, etc. in sessions
+opt.sessionoptions = {
+	"buffers",
+	"curdir",
+	"tabpages",
+	"winsize",
+	"winpos",
+	"terminal",
+}
