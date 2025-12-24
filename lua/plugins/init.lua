@@ -3,10 +3,11 @@
 -- Uses lazy.nvim for modern plugin management
 
 local fn = vim.fn
+local uv = vim.uv or vim.loop
 
 -- Bootstrap lazy.nvim
 local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not uv.fs_stat(lazypath) then
 	fn.system({
 		"git",
 		"clone",
@@ -26,6 +27,7 @@ require("lazy").setup({
 		{ import = "plugins.treesitter" },
 		{ import = "plugins.telescope" },
 		{ import = "plugins.ui" },
+		{ import = "plugins.trouble" },
 		{ import = "plugins.editor" },
 		--    { import = "plugins.others" },
 		{ import = "plugins.conform" },

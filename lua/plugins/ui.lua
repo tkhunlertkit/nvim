@@ -19,17 +19,19 @@ return {
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			local function obsession_status()
-				if vim.g.obsession_active == 1 then
-					return "●" -- tracking
+				if vim.v.this_session ~= "" then
+					return "● " .. vim.fn.fnamemodify(vim.v.this_session, ":t") -- tracking
 				else
 					return "○" -- not tracking
 				end
 			end
 			require("lualine").setup({
 				options = {
+					always_show_tabline = false,
+					icons_enabled = true,
 					theme = "auto",
-					component_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
+					component_separators = { left = "", right = "" },
+					section_separators = { left = "", right = "" },
 					disabled_filetypes = {},
 					always_divide_middle = true,
 					globalstatus = false,
@@ -37,43 +39,21 @@ return {
 				sections = {
 					lualine_a = { "mode" },
 					lualine_b = { "branch", "diff", "diagnostics" },
-					lualine_c = { "filename" },
-					lualine_x = { obsession_status, "encoding", "fileformat", "filetype" },
+					lualine_c = { { "filename", file_status = true, path = 1 } },
+					lualine_x = { "searchcount", "encoding", "fileformat", "filetype", "lsp_status" },
 					lualine_y = { "progress" },
 					lualine_z = { "location" },
 				},
 				inactive_sections = {
 					lualine_a = {},
-					lualine_b = {},
+					lualine_b = { "diff", "diagnostics" },
 					lualine_c = { "filename" },
 					lualine_x = { "location" },
 					lualine_y = {},
 					lualine_z = {},
 				},
 				tabline = {},
-				winbar = {},
-				inactive_winbar = {},
 				extensions = { "nvim-tree", "quickfix", "trouble" },
-			})
-		end,
-	},
-
-	-- Bufferline (tab bar)
-	{
-		"akinsho/bufferline.nvim",
-		event = "VimEnter",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("bufferline").setup({
-				options = {
-					mode = "tabs",
-					separator_style = "slant",
-					always_show_bufferline = true,
-					show_buffer_close_icons = true,
-					show_close_icon = true,
-					color_icons = true,
-					diagnostics = "nvim_lsp",
-				},
 			})
 		end,
 	},

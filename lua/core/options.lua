@@ -81,3 +81,4 @@ opt.sessionoptions = {
 	"winpos",
 	"terminal",
 }
+opt.showtabline = 0

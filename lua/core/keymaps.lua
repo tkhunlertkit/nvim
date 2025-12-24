@@ -140,11 +140,13 @@ end, opts)
 
 -- Navigate diagnostics
 map("n", "[d", function()
-	vim.diagnostic.goto_prev()
+	vim.diagnostic.jump({ count = -1, float = true })
+	-- vim.diagnostic.goto_prev()
 end, opts)
 
 map("n", "]d", function()
-	vim.diagnostic.goto_next()
+	vim.diagnostic.jump({ count = 1, float = true })
+	-- vim.diagnostic.goto_next()
 end, opts)
 
 -- Set diagnostic signs

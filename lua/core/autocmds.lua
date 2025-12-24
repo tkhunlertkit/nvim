@@ -72,6 +72,8 @@ api.nvim_create_autocmd("TermOpen", {
 -- ============================================================================
 api.nvim_create_autocmd("VimEnter", {
 	callback = function()
+		-- Disable tabline
+		vim.opt.showtabline = 0
 		-- Do nothing if we started with -S or a specific file/command
 		if vim.fn.argc() > 0 then
 			return
@@ -82,12 +84,10 @@ api.nvim_create_autocmd("VimEnter", {
 		vim.schedule(function()
 			if vim.fn.filereadable(session) == 1 then
 				-- Load existing session
-				print("loading session")
 				vim.cmd("silent! source " .. session)
 			else
 				-- No session yet: start tracking with Obsession
 				-- Requires tpope/vim-obsession to be installed
-				print("creating session ::", session)
 				vim.cmd("Obsession " .. session)
 			end
 		end)
