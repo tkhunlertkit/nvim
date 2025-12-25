@@ -55,7 +55,7 @@ opt.list = true -- Show whitespace characters
 opt.listchars = {
 	tab = "→ ",
 	trail = "·",
-	nbsp = "·",
+	space = "·",
 	extends = "»",
 	precedes = "«",
 }
@@ -81,4 +81,3 @@ opt.sessionoptions = {
 	"winpos",
 	"terminal",
 }
-opt.showtabline = 0

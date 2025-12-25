@@ -35,6 +35,12 @@ require("lazy").setup({
 		{ import = "plugins.schemastore" },
 		{ import = "plugins.which-key" },
 		{ import = "plugins.obsession" },
+		{ import = "plugins.lualine" },
+		{ import = "plugins.noice" },
+		{ import = "plugins.vim_notify" },
+		{ import = "plugins.indent_blankline" },
+		{ import = "plugins.rainbow_delimiters" },
+		-- { import = "plugins.sleuth" },
 	},
 	install = {
 		colorscheme = { "nord" },
