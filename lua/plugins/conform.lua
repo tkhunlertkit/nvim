@@ -47,9 +47,13 @@ return {
 				css = { "prettier" },
 			},
 
+			formatters = {
+				black = { prepend_args = { "--line-length", "120" } },
+			},
+
 			-- Format on save
 			format_on_save = {
-				timeout_ms = 500,
+				timeout_ms = 1000,
 				lsp_fallback = true, -- Use LSP if conform doesn't have formatter
 			},
 

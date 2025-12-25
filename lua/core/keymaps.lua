@@ -32,11 +32,11 @@ map("n", "<leader>.", "<cmd>vertical resize +5<cr>", opts)
 -- Decrease width by 5
 map("n", "<leader>,", "<cmd>vertical resize -5<cr>", opts)
 -- Increase height by 5
-map("n", "<leader>v", "<cmd>resize +5<cr>", opts)
+map("n", "<leader>=", "<cmd>resize +5<cr>", opts)
 -- Decrease height by 5
-map("n", "<leader>c", "<cmd>resize -5<cr>", opts)
+map("n", "<leader>-", "<cmd>resize -5<cr>", opts)
 -- Equalize all window panes
-map("n", "<leader>=", "<C-w>=", opts)
+map("n", "<leader>+", "<C-w>=", opts)
 
 -- ============================================================================
 -- Leader Key Bindings
