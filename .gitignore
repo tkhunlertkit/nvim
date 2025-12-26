@@ -31,3 +31,6 @@ session.vim
 
 # Backup files
 *.bak
+
+# nvim session files
+*.vim
