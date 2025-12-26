@@ -1,5 +1,15 @@
 -- lua/plugins/lualine.lua
 --
+--
+
+local function macro_recording()
+	local reg = vim.fn.reg_recording()
+	if reg == "" then
+		return ""
+	end
+	return "REC @" .. reg
+end
+
 return
 -- Statusline (lualine)
 {
@@ -19,7 +29,7 @@ return
 				globalstatus = false,
 			},
 			sections = {
-				lualine_a = { "mode" },
+				lualine_a = { "mode", macro_recording },
 				lualine_b = { "branch", "diff", "diagnostics" },
 				lualine_c = { { "filename", file_status = true, path = 1 } },
 				lualine_x = { "searchcount", "encoding", "fileformat", "filetype", "lsp_status" },

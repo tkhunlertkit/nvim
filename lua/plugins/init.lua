@@ -29,7 +29,7 @@ require("lazy").setup({
 		{ import = "plugins.telescope" },
 		{ import = "plugins.trouble" },
 		{ import = "plugins.editor" },
-        -- { import = "plugins.others" },
+		-- { import = "plugins.others" },
 		{ import = "plugins.conform" },
 		{ import = "plugins.fidget" },
 		{ import = "plugins.schemastore" },
@@ -40,6 +40,7 @@ require("lazy").setup({
 		{ import = "plugins.vim_notify" },
 		{ import = "plugins.indent_blankline" },
 		{ import = "plugins.rainbow_delimiters" },
+		{ import = "plugins.neogen" },
 
 		-- { import = "plugins.sleuth" },
 	},
