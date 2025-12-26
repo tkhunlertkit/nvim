@@ -48,7 +48,9 @@ return {
 			},
 
 			formatters = {
-				black = { prepend_args = { "--line-length", "120" } },
+				black = {
+					prepend_args = { "--line-length", "120" },
+				},
 			},
 
 			-- Format on save
