@@ -195,3 +195,8 @@ end, opts)
 map("n", "<leader>sp", "<cmd>Obsession<cr>", annotate(opts, "pause session tracking"))
 -- Quickly source Session.vim in current dir
 map("n", "<leader>ss", "<cmd>source Session.vim<cr>", annotate(opts, "load session"))
+
+-- ============================================================================
+-- Neogen
+-- ============================================================================
+map("n", "<leader>nf", "<cmd>lua require('neogen').generate()<cr>", annotate(opts, "generate docstring"))
