@@ -5,6 +5,10 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
+local function annotate(base_opts, desc)
+	return vim.tbl_extend("force", base_opts, { desc = desc })
+end
+
 -- ============================================================================
 -- General Navigation & Editor
 -- ============================================================================
@@ -43,9 +47,9 @@ map("n", "<leader>+", "<C-w>=", opts)
 -- ============================================================================
 
 -- File operations
-map("n", "<leader>w", ":w<CR>", opts)
-map("n", "<leader>q", ":q<CR>", opts)
-map("n", "<leader>Q", ":qa<CR>", opts)
+map("n", "<leader>w", ":w<CR>", annotate(opts, "save"))
+map("n", "<leader>q", ":q<CR>", annotate(opts, "close"))
+map("n", "<leader>Q", ":qa<CR>", annotate(opts, "quite all"))
 
 map("n", "<Esc><Esc>", ":nohlsearch<CR>", opts)
 
@@ -61,11 +65,18 @@ map("n", "Y", "y$", opts)
 
 map("n", "<leader>ff", function()
 	require("telescope.builtin").find_files()
-end, opts)
+end, annotate(opts, "find files"))
+
+map("n", "<leader>fF", function()
+	require("telescope.builtin").find_files({
+		hidden = true,
+		no_ignore = true,
+	})
+end, annotate(opts, "find files including hidden files"))
 
 map("n", "<leader>fg", function()
 	require("telescope.builtin").live_grep()
-end, opts)
+end, annotate(opts, "find in files"))
 
 map("n", "<leader>fb", function()
 	require("telescope.builtin").buffers()
@@ -73,7 +84,7 @@ end, opts)
 
 map("n", "<leader>fh", function()
 	require("telescope.builtin").help_tags()
-end, opts)
+end, annotate(opts, "find help"))
 
 map("n", "<leader>fr", function()
 	require("telescope.builtin").oldfiles()
@@ -81,7 +92,7 @@ end, opts)
 
 map("n", "<leader>fc", function()
 	require("telescope.builtin").commands()
-end, opts)
+end, annotate(opts, "find commands"))
 
 -- map("n", "<leader>/", function()
 --   require("telescope.builtin").current_buffer_fuzzy_find()
@@ -93,7 +104,7 @@ end, opts)
 
 map("n", "<leader>e", function()
 	require("nvim-tree.api").tree.toggle()
-end, opts)
+end, annotate(opts, "open vim tree"))
 
 -- ============================================================================
 -- LSP (Language Server Protocol)
@@ -107,12 +118,12 @@ end, opts)
 -- Go to definition
 map("n", "gd", function()
 	vim.lsp.buf.definition()
-end, opts)
+end, annotate(opts, "Go to definition"))
 
 -- Go to implementation
 map("n", "gi", function()
 	vim.lsp.buf.implementation()
-end, opts)
+end, annotate(opts, "Go to implementation"))
 
 -- Go to references
 map("n", "gr", function()
@@ -181,6 +192,6 @@ end, opts)
 -- Obsession
 -- ============================================================================
 -- Toggle Obsession tracking
-map("n", "<leader>sp", "<cmd>Obsession<cr>", opts)
+map("n", "<leader>sp", "<cmd>Obsession<cr>", annotate(opts, "pause session tracking"))
 -- Quickly source Session.vim in current dir
-map("n", "<leader>ss", "<cmd>source Session.vim<cr>", opts)
+map("n", "<leader>ss", "<cmd>source Session.vim<cr>", annotate(opts, "load session"))
