@@ -22,14 +22,14 @@ vim.opt.rtp:prepend(lazypath)
 -- Load plugin specifications
 require("lazy").setup({
 	spec = {
+		{ import = "plugins.ui" },
 		{ import = "plugins.lsp" },
 		{ import = "plugins.cmp" },
 		{ import = "plugins.treesitter" },
 		{ import = "plugins.telescope" },
-		{ import = "plugins.ui" },
 		{ import = "plugins.trouble" },
 		{ import = "plugins.editor" },
-		--    { import = "plugins.others" },
+        -- { import = "plugins.others" },
 		{ import = "plugins.conform" },
 		{ import = "plugins.fidget" },
 		{ import = "plugins.schemastore" },
@@ -40,10 +40,8 @@ require("lazy").setup({
 		{ import = "plugins.vim_notify" },
 		{ import = "plugins.indent_blankline" },
 		{ import = "plugins.rainbow_delimiters" },
+
 		-- { import = "plugins.sleuth" },
-	},
-	install = {
-		colorscheme = { "nord" },
 	},
 	checker = {
 		enabled = true,

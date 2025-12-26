@@ -11,7 +11,7 @@ return
 			options = {
 				always_show_tabline = false,
 				icons_enabled = true,
-				theme = "auto",
+				theme = "nord",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {},
