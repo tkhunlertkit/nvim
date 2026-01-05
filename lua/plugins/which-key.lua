@@ -7,6 +7,8 @@ return {
   "folke/which-key.nvim",
   event = "VeryLazy",
   opts = {
+    preset = "modern",
+    delay = 400,
     plugins = {
       marks = true,
       registers = true,
@@ -24,12 +26,9 @@ return {
         g = true,
       },
     },
-    window = {
+    win = {
       border = "rounded",
-      position = "bottom",
-      margin = { 1, 0, 1, 0 },
       padding = { 2, 2, 2, 2 },
-      winblend = 0,
     },
     layout = {
       height = { min = 4, max = 25 },
@@ -37,14 +36,8 @@ return {
       spacing = 3,
       align = "left",
     },
-    ignore_missing = false,
     show_help = true,
     show_keys = true,
-    triggers = "auto",
-    triggers_blacklist = {
-      i = { "j", "k" },
-      v = { "j", "k" },
-    },
   },
   config = function(_, opts)
     local wk = require("which-key")

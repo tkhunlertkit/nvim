@@ -69,9 +69,19 @@ return {
         },
         sort_by = "insert_after_current",
       },
-      highlights = require("nord").bufferline.highlights({
-        bold = true,
-      }),
+      -- Nord theme integration - use simple highlights without nord.bufferline
+      highlights = {
+        fill = {
+          bg = "#2E3440",
+        },
+        background = {
+          bg = "#2E3440",
+        },
+        buffer_selected = {
+          bold = true,
+          italic = false,
+        },
+      },
     })
   end,
 }

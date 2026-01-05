@@ -11,6 +11,7 @@ return {
     { "gc", mode = { "n", "v" }, desc = "Comment" },
     { "gbc", mode = "n", desc = "Block comment line" },
     { "gb", mode = { "n", "v" }, desc = "Block comment" },
+    { "<leader>c<leader>", mode = { "n", "v" }, desc = "Toggle comment" },
   },
   config = function()
     require("Comment").setup({
@@ -37,5 +38,11 @@ return {
       pre_hook = nil,
       post_hook = nil,
     })
+
+    -- Add toggle keymap for <leader>c<leader>
+    local api = require("Comment.api")
+    vim.keymap.set({ "n", "v" }, "<leader>c<leader>", function()
+      api.toggle.linewise.current()
+    end, { desc = "Toggle comment" })
   end,
 }

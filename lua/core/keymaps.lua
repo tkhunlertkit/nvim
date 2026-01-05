@@ -53,6 +53,7 @@ map("n", "<leader>sv", "<C-w>v", desc("Split window vertically"))
 map("n", "<leader>sh", "<C-w>s", desc("Split window horizontally"))
 map("n", "<leader>se", "<C-w>=", desc("Make splits equal size"))
 map("n", "<leader>sx", "<cmd>close<CR>", desc("Close current split"))
+map("n", "<leader>=", "<C-w>=", desc("Make splits equal size"))
 
 -- ============================================================================
 -- Buffer Management
@@ -121,13 +122,6 @@ map("n", "]l", "<cmd>lnext<CR>", desc("Next location"))
 map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<CR>", desc("Toggle floating terminal"))
 map("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<CR>", desc("Toggle horizontal terminal"))
 map("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<CR>", desc("Toggle vertical terminal"))
-
--- Terminal mode mappings
-map("t", "<C-h>", "<C-\\><C-N><C-w>h", desc("Go to left window"))
-map("t", "<C-j>", "<C-\\><C-N><C-w>j", desc("Go to bottom window"))
-map("t", "<C-k>", "<C-\\><C-N><C-w>k", desc("Go to top window"))
-map("t", "<C-l>", "<C-\\><C-N><C-w>l", desc("Go to right window"))
-map("t", "<Esc>", "<C-\\><C-n>", desc("Exit terminal mode"))
 
 -- ============================================================================
 -- Diagnostic Navigation

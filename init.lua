@@ -24,13 +24,13 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Load core configuration modules
 -- Order matters: options first, then plugins, then keymaps/autocmds
-require("core.options")      -- Global vim options
-require("core.keymaps")       -- Key mappings
-require("core.autocmds")      -- Autocommands
-require("core.commands")      -- User commands
+require("core.options")  -- Global vim options
+require("core.keymaps")  -- Key mappings
+require("core.autocmds") -- Autocommands
+require("core.commands") -- User commands
 
 -- Setup lazy.nvim and load all plugins
-require("plugins")
+dofile(vim.fn.stdpath("config") .. "/lua/plugins/lazy-bootstrap.lua")
 
 -- Load custom user configuration if it exists
 -- This allows for machine-specific settings without modifying main config

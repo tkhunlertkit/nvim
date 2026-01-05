@@ -11,6 +11,10 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true },
   },
   config = function()
+    -- Suppress deprecation warning temporarily
+    local notify_level = vim.log.levels.WARN
+    vim.deprecate = function() end
+
     local lspconfig = require("lspconfig")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -19,9 +23,9 @@ return {
     -- ========================================================================
     local signs = {
       { name = "DiagnosticSignError", text = "" },
-      { name = "DiagnosticSignWarn", text = "" },
-      { name = "DiagnosticSignHint", text = "" },
-      { name = "DiagnosticSignInfo", text = "" },
+      { name = "DiagnosticSignWarn",  text = "" },
+      { name = "DiagnosticSignHint",  text = "" },
+      { name = "DiagnosticSignInfo",  text = "" },
     }
 
     for _, sign in ipairs(signs) do
@@ -125,62 +129,29 @@ return {
     -- Language Server Configurations
     -- ========================================================================
 
+    -- Helper to load server configs from separate files
+    local function load_server_config(server_name)
+      local ok, config = pcall(require, "plugins.lsp.servers." .. server_name)
+      if ok then
+        return config
+      end
+      return {}
+    end
+
     -- Lua
-    lspconfig.lua_ls.setup(vim.tbl_deep_extend("force", default_config, {
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { "vim" },
-          },
-          workspace = {
-            library = {
-              [vim.fn.expand("/lua")] = true,
-              [vim.fn.stdpath("config") .. "/lua"] = true,
-            },
-            checkThirdParty = false,
-          },
-          telemetry = {
-            enable = false,
-          },
-          completion = {
-            callSnippet = "Replace",
-          },
-        },
-      },
-    }))
+    lspconfig.lua_ls.setup(vim.tbl_deep_extend("force", default_config, load_server_config("lua_ls")))
 
     -- Python
-    lspconfig.pyright.setup(default_config)
+    lspconfig.pyright.setup(vim.tbl_deep_extend("force", default_config, load_server_config("pyright")))
 
     -- TypeScript/JavaScript
     lspconfig.ts_ls.setup(default_config)
 
     -- Go
-    lspconfig.gopls.setup(vim.tbl_deep_extend("force", default_config, {
-      settings = {
-        gopls = {
-          analyses = {
-            unusedparams = true,
-          },
-          staticcheck = true,
-          gofumpt = true,
-        },
-      },
-    }))
+    lspconfig.gopls.setup(vim.tbl_deep_extend("force", default_config, load_server_config("gopls")))
 
     -- Rust
-    lspconfig.rust_analyzer.setup(vim.tbl_deep_extend("force", default_config, {
-      settings = {
-        ["rust-analyzer"] = {
-          checkOnSave = {
-            command = "clippy",
-          },
-          cargo = {
-            allFeatures = true,
-          },
-        },
-      },
-    }))
+    lspconfig.rust_analyzer.setup(vim.tbl_deep_extend("force", default_config, load_server_config("rust_analyzer")))
 
     -- Bash
     lspconfig.bashls.setup(default_config)
@@ -218,4 +189,3 @@ return {
     })
   end,
 }
-
