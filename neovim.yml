@@ -1,0 +1,10 @@
+---
+# ~/.config/nvim/neovim.yml
+
+base: lua51
+
+name: neovim
+
+globals:
+  vim:
+    any: true

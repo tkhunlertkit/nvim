@@ -93,3 +93,12 @@ api.nvim_create_autocmd("VimEnter", {
 		end)
 	end,
 })
+
+-- ============================================================================
+-- load highlights
+-- ============================================================================
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		require("core.highlights").setup()
+	end,
+})
