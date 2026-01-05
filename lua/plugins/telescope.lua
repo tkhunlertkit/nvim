@@ -20,7 +20,19 @@ return {
 
 			telescope.setup({
 				defaults = {
-					previewer = false,
+					-- layout horizontally
+					layout_strategy = "horizontal",
+					layout_config = {
+						horizontal = {
+							prompt_position = "bottom",
+							preview_width = 0.6, -- 60% preview, 40% list
+						},
+						width = 0.95,
+						height = 0.85,
+						preview_cutoff = 0, -- always show preview when window is wide enough
+					},
+
+					previewer = true,
 					prompt_prefix = "🔍 ",
 					selection_caret = "❯ ",
 					path_display = { "truncate" },
@@ -40,27 +52,25 @@ return {
 				},
 				pickers = {
 					find_files = {
-						theme = "dropdown",
 						previewer = true,
-						hidden = true,
+						hidden = false,
 					},
 					live_grep = {
-						theme = "dropdown",
+						previewer = true,
 					},
 					buffers = {
-						theme = "dropdown",
-						previewer = false,
+						previewer = true,
 						sort_mru = true,
 						sort_lastused = true,
 					},
 					help_tags = {
-						theme = "dropdown",
+						previewer = true,
 					},
 					oldfiles = {
-						theme = "dropdown",
+						previewer = true,
 					},
 					commands = {
-						theme = "dropdown",
+						previewer = true,
 					},
 				},
 				extensions = {
