@@ -1,66 +1,62 @@
--- Trouble (diagnostics list)
-return {
-	"folke/trouble.nvim",
-	cmd = { "TroubleToggle", "Trouble" },
-	config = function()
-		require("trouble").setup({
-			position = "bottom",
-			height = 10,
-			width = 50,
-			icons = {
-				error = "",
-				warn = "",
-				hint = "",
-				info = "",
-			},
-			mode = "workspace_diagnostics",
-			fold_open = "v",
-			fold_closed = ">",
-			group = true,
-			padding = true,
-			action_keys = {
-				close = "q",
-				cancel = "<esc>",
-				refresh = "r",
-				jump = { "<cr>", "<tab>" },
-				open_split = { "<c-x>" },
-				open_vsplit = { "<c-v>" },
-				open_tab = { "<c-t>" },
-				jump_close = { "o" },
-				toggle_mode = "m",
-				switch_severity = "s",
-				toggle_preview = "P",
-				hover = "K",
-				preview = "p",
-				close_folds = { "zM", "zm" },
-				open_folds = { "zR", "zr" },
-				toggle_fold = { "zA", "za" },
-				previous = "k",
-				next = "j",
-			},
-			indent_lines = true,
-			auto_open = false,
-			auto_close = false,
-			auto_preview = true,
-			auto_fold = false,
-			auto_jump = false,
-			signs = {
-				error = "❌",
-				warning = "⚠",
-				hint = "💡",
-				information = "ℹ",
-				other = "🔍",
-			},
-			use_diagnostic_signs = false,
-		})
+-- ============================================================================
+-- Trouble: Diagnostics list
+-- A pretty diagnostics, references, quickfix and location list
+-- ============================================================================
 
-		vim.keymap.set("n", "<leader>xx", ":Trouble diagnostics toggle<CR>", { noremap = true, silent = true })
-		vim.keymap.set(
-			"n",
-			"<leader>xw",
-			":Trouble diagnostics toggle filter.buf=0<CR>",
-			{ noremap = true, silent = true }
-		)
-		vim.keymap.set("n", "<leader>xf", ":Trouble symbols toggle focus=false<CR>", { noremap = true, silent = true })
-	end,
+return {
+  "folke/trouble.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  cmd = { "Trouble", "TroubleToggle" },
+  keys = {
+    { "<leader>xx", "<cmd>TroubleToggle<CR>", desc = "Toggle Trouble" },
+    { "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<CR>", desc = "Workspace diagnostics" },
+    { "<leader>xd", "<cmd>TroubleToggle document_diagnostics<CR>", desc = "Document diagnostics" },
+    { "<leader>xq", "<cmd>TroubleToggle quickfix<CR>", desc = "Quickfix" },
+    { "<leader>xl", "<cmd>TroubleToggle loclist<CR>", desc = "Location list" },
+    { "gR", "<cmd>TroubleToggle lsp_references<CR>", desc = "LSP references" },
+  },
+  opts = {
+    position = "bottom",
+    height = 10,
+    width = 50,
+    icons = true,
+    mode = "workspace_diagnostics",
+    fold_open = "",
+    fold_closed = "",
+    group = true,
+    padding = true,
+    action_keys = {
+      close = "q",
+      cancel = "<esc>",
+      refresh = "r",
+      jump = { "<cr>", "<tab>" },
+      open_split = { "<c-x>" },
+      open_vsplit = { "<c-v>" },
+      open_tab = { "<c-t>" },
+      jump_close = { "o" },
+      toggle_mode = "m",
+      toggle_preview = "P",
+      hover = "K",
+      preview = "p",
+      close_folds = { "zM", "zm" },
+      open_folds = { "zR", "zr" },
+      toggle_fold = { "zA", "za" },
+      previous = "k",
+      next = "j",
+    },
+    indent_lines = true,
+    auto_open = false,
+    auto_close = false,
+    auto_preview = true,
+    auto_fold = false,
+    auto_jump = { "lsp_definitions" },
+    signs = {
+      error = "",
+      warning = "",
+      hint = "",
+      information = "",
+      other = "",
+    },
+    use_diagnostic_signs = true,
+  },
 }

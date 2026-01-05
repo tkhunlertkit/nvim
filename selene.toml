@@ -1,4 +1,0 @@
-# ~/.config/nvim/selene.toml
-
-# Point Selene to the Neovim std file named "neovim.toml"
-std = "neovim"

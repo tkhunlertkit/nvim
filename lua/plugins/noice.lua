@@ -1,35 +1,47 @@
--- lua/plugins/noice.lua
+-- ============================================================================
+-- Noice: Better UI for messages, cmdline and popupmenu
+-- Replaces the UI for messages, cmdline and the popupmenu
+-- ============================================================================
 
 return {
-	-- Noice (better messages, command line UI)
-	"folke/noice.nvim",
-	event = "VeryLazy",
-	dependencies = {
-		"MunifTanjim/nui.nvim",
-		"rcarriga/nvim-notify",
-	},
-	config = function()
-		require("noice").setup({
-			lsp = {
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true,
-				},
-			},
-			routes = {
-				{ filter = { event = "msg_show", kind = "search_count" }, opts = { skip = true } },
-			},
-			presets = {
-				lsp_doc_border = true,
-				command_palette = true,
-				long_message_to_split = true,
-				inc_rename = true,
-				bottom_search = true,
-			},
-			notify = {
-				enable = false,
-			},
-		})
-	end,
+  "folke/noice.nvim",
+  event = "VeryLazy",
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "rcarriga/nvim-notify",
+  },
+  opts = {
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+        ["cmp.entry.get_documentation"] = true,
+      },
+    },
+    routes = {
+      {
+        filter = {
+          event = "msg_show",
+          any = {
+            { find = "%d+L, %d+B" },
+            { find = "; after #%d+" },
+            { find = "; before #%d+" },
+          },
+        },
+        view = "mini",
+      },
+    },
+    presets = {
+      bottom_search = true,
+      command_palette = true,
+      long_message_to_split = true,
+      inc_rename = false,
+      lsp_doc_border = true,
+    },
+  },
+  keys = {
+    { "<leader>sn", "<cmd>Noice<CR>", desc = "Noice messages" },
+    { "<leader>sl", "<cmd>Noice last<CR>", desc = "Noice last message" },
+    { "<leader>sh", "<cmd>Noice history<CR>", desc = "Noice history" },
+  },
 }
