@@ -23,6 +23,8 @@ vim.opt.rtp:prepend(lazypath)
 -- Load plugin specifications
 require("lazy").setup({
 	spec = {
+		{ import = "plugins.mason" },
+		{ import = "plugins.mason-conform" },
 		{ import = "plugins.cmp" },
 		{ import = "plugins.conform" },
 		{ import = "plugins.editor" },
