@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/rainbow_delimiters.lua
 
 return {

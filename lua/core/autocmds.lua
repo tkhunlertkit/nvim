@@ -73,7 +73,7 @@ api.nvim_create_autocmd("TermOpen", {
 api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		-- Disable tabline
-		vim.opt.showtabline = 0
+		vim.opt.showtabline = 2
 		-- Do nothing if we started with -S or a specific file/command
 		if vim.fn.argc() > 0 then
 			return

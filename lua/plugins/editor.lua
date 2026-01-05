@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/editor.lua
 -- Editor enhancements: file explorer, commenting, surround, etc.
 

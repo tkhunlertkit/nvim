@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/ui.lua
 -- UI enhancements: colorscheme, statusline, indentation guides, etc.
 

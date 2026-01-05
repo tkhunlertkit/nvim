@@ -10,16 +10,14 @@ local function macro_recording()
 	return "REC @" .. reg
 end
 
-return
--- Statusline (lualine)
-{
+-- selene: allow(mixed_table)
+return {
 	"nvim-lualine/lualine.nvim",
 	event = "VimEnter",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
 		require("lualine").setup({
 			options = {
-				always_show_tabline = false,
 				icons_enabled = true,
 				theme = "nord",
 				component_separators = { left = "", right = "" },
@@ -27,6 +25,7 @@ return
 				disabled_filetypes = {},
 				always_divide_middle = true,
 				globalstatus = false,
+				always_show_tabline = true,
 			},
 			sections = {
 				lualine_a = { "mode", macro_recording },
@@ -44,7 +43,37 @@ return
 				lualine_y = {},
 				lualine_z = {},
 			},
-			tabline = {},
+			tabline = {
+				lualine_a = { "tabs" },
+				lualine_b = {},
+				lualine_c = {
+					{
+						function()
+							-- Treesitter breadcrumb: Class → function → method
+							local ok, ts = pcall(require, "nvim-treesitter")
+							if not ok then
+								return ""
+							end
+							return ts.statusline({
+								type_patterns = { "class", "function", "method" },
+								separator = " → ",
+								indicator_size = 80, -- max width of the breadcrumb
+								transform_fn = function(line)
+									return line:gsub("%s*[%(%[].*$", "") -- strip args if you want
+								end,
+							})
+						end,
+						cond = function()
+							-- only show when Treesitter is active for the buffer
+							local ok, parsers = pcall(require, "nvim-treesitter.parsers")
+							return ok and parsers.has_parser()
+						end,
+					},
+				},
+				lualine_x = {},
+				lualine_y = {},
+				lualine_z = {},
+			},
 			extensions = { "nvim-tree", "quickfix", "trouble" },
 		})
 	end,

@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- json schema store (for better json/yaml validation)
 return {
 	"b0o/schemastore.nvim",

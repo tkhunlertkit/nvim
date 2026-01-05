@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- LSP Progress UI (loading indicator)
 return {
 	"j-hui/fidget.nvim",

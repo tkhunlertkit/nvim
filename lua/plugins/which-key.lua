@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/which-key.lua
 return {
 	"folke/which-key.nvim",

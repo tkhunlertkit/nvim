@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- Trouble (diagnostics list)
 return {
 	"folke/trouble.nvim",

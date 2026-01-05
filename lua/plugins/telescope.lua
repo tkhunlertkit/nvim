@@ -1,10 +1,11 @@
--- lua/plugins/telescope.lua
+-- selene: allow(mixed_table)
+-- -- lua/plugins/telescope.lua
 -- Fuzzy finder (Telescope) configuration
 
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		branch = "0.1.x",
+		-- branch = "0.1.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -80,9 +81,7 @@ return {
 						override_file_sorter = true,
 						case_mode = "smart_case",
 					},
-					["ui-select"] = {
-						require("telescope.themes").get_dropdown({}),
-					},
+					["ui-select"] = require("telescope.themes").get_dropdown(),
 				},
 			})
 

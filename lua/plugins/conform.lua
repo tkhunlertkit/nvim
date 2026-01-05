@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/conform.lua
 
 -- Code formatter plugin using conform.nvim

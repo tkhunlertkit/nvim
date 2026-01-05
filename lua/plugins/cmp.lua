@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/cmp.lua
 -- Completion (nvim-cmp) configuration
 -- Provides autocomplete with LSP, snippets, and more

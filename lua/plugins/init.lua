@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/init.lua
 -- Plugin manager setup and lazy loading
 -- Uses lazy.nvim for modern plugin management

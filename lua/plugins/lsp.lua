@@ -1,3 +1,4 @@
+-- selene: allow(mixed_table)
 -- lua/plugins/lsp.lua
 
 -- LSP (Language Server Protocol) configuration
