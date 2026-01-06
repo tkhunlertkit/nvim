@@ -105,9 +105,16 @@ return {
 	{
 		"mbbill/undotree",
 		cmd = "UndotreeToggle",
-		config = function()
-			vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { noremap = true, silent = true })
-		end,
+		keys = {
+			{
+				"<leader>u",
+				function()
+					vim.cmd.UndotreeToggle()
+					vim.cmd.UndotreeFocus()
+				end,
+				desc = "Toggle undo tree",
+			},
+		},
 	},
 
 	-- Project management
