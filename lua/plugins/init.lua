@@ -45,6 +45,7 @@ require("lazy").setup({
 		{ import = "plugins.trouble" },
 		{ import = "plugins.ui" },
 		{ import = "plugins.which-key" },
+		{ import = "plugins.dap" },
 
 		-- { import = "plugins.others" },
 		-- { import = "plugins.oil_nvim" },

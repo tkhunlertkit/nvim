@@ -5,8 +5,8 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
-local function annotate(base_opts, desc)
-	return vim.tbl_extend("force", base_opts, { desc = desc })
+local function desc(description)
+	return vim.tbl_extend("force", opts, { desc = description })
 end
 
 -- ============================================================================
@@ -39,19 +39,42 @@ map("n", "<leader>,", "<cmd>vertical resize -5<cr>", opts)
 map("n", "<leader>=", "<cmd>resize +5<cr>", opts)
 -- Decrease height by 5
 map("n", "<leader>-", "<cmd>resize -5<cr>", opts)
--- Equalize all window panes
-map("n", "<leader>+", "<C-w>=", opts)
+
+-- Split windows
+map("n", "<leader>sv", "<C-w>v", desc("Split window vertically"))
+map("n", "<leader>sh", "<C-w>s", desc("Split window horizontally"))
+map("n", "<leader>se", "<C-w>=", desc("Make splits equal size"))
+
+-- Delete without yanking
+map("n", "<leader>d", '"_d', desc("Delete without yank"))
+map("v", "<leader>d", '"_d', desc("Delete without yank"))
+
+-- Select all
+map("n", "<C-a>", "gg<S-v>G", desc("Select all"))
+
+-- ============================================================================
+-- Search and Replace
+-- ============================================================================
+
+-- Keep search matches centered
+map("n", "n", "nzzzv", desc("Next search result (centered)"))
+map("n", "N", "Nzzzv", desc("Previous search result (centered)"))
+
+-- Better search and replace
+map("n", "<leader>s", ":%s//g<Left><Left>", desc("Search and replace"))
+map("v", "<leader>s", ":s//g<Left><Left>", desc("Search and replace in selection"))
 
 -- ============================================================================
 -- Leader Key Bindings
 -- ============================================================================
 
 -- File operations
-map("n", "<leader>w", ":w<CR>", annotate(opts, "save"))
-map("n", "<leader>q", ":q<CR>", annotate(opts, "close"))
-map("n", "<leader>Q", ":qa<CR>", annotate(opts, "quite all"))
+map("n", "<leader>w", ":w<CR>", desc("save"))
+map("n", "<leader>q", ":q<CR>", desc("close"))
+map("n", "<leader>Q", ":qa<CR>", desc("quite all"))
+map("n", "<leader>x", "<cmd>x<CR>", desc("Save and quit"))
 
-map("n", "<Esc><Esc>", ":nohlsearch<CR>", opts)
+map("n", "<Esc><Esc>", ":nohlsearch<CR>", desc("Clear search highlights"))
 
 -- Better paste (don't overwrite paste buffer)
 map("v", "p", '"_dP', opts)
@@ -65,18 +88,18 @@ map("n", "Y", "y$", opts)
 
 map("n", "<leader>ff", function()
 	require("telescope.builtin").find_files()
-end, annotate(opts, "find files"))
+end, desc("find files"))
 
 map("n", "<leader>fF", function()
 	require("telescope.builtin").find_files({
 		hidden = true,
 		no_ignore = true,
 	})
-end, annotate(opts, "find files including hidden files"))
+end, desc("find files including hidden files"))
 
 map("n", "<leader>fg", function()
 	require("telescope.builtin").live_grep()
-end, annotate(opts, "find in files"))
+end, desc("find in files"))
 
 map("n", "<leader>fb", function()
 	require("telescope.builtin").buffers()
@@ -84,7 +107,7 @@ end, opts)
 
 map("n", "<leader>fh", function()
 	require("telescope.builtin").help_tags()
-end, annotate(opts, "find help"))
+end, desc("find help"))
 
 map("n", "<leader>fr", function()
 	require("telescope.builtin").oldfiles()
@@ -92,7 +115,7 @@ end, opts)
 
 map("n", "<leader>fc", function()
 	require("telescope.builtin").commands()
-end, annotate(opts, "find commands"))
+end, desc("find commands"))
 
 -- map("n", "<leader>/", function()
 --   require("telescope.builtin").current_buffer_fuzzy_find()
@@ -104,7 +127,7 @@ end, annotate(opts, "find commands"))
 
 map("n", "<leader>e", function()
 	require("nvim-tree.api").tree.toggle()
-end, annotate(opts, "open vim tree"))
+end, desc("open vim tree"))
 
 -- ============================================================================
 -- LSP (Language Server Protocol)
@@ -118,12 +141,12 @@ end, opts)
 -- Go to definition
 map("n", "gd", function()
 	vim.lsp.buf.definition()
-end, annotate(opts, "Go to definition"))
+end, desc("Go to definition"))
 
 -- Go to implementation
 map("n", "gi", function()
 	vim.lsp.buf.implementation()
-end, annotate(opts, "Go to implementation"))
+end, desc("Go to implementation"))
 
 -- Go to references
 map("n", "gr", function()
@@ -192,11 +215,11 @@ end, opts)
 -- Obsession
 -- ============================================================================
 -- Toggle Obsession tracking
-map("n", "<leader>sp", "<cmd>Obsession<cr>", annotate(opts, "pause session tracking"))
+map("n", "<leader>sp", "<cmd>Obsession<cr>", desc("pause session tracking"))
 -- Quickly source Session.vim in current dir
-map("n", "<leader>ss", "<cmd>source Session.vim<cr>", annotate(opts, "load session"))
+map("n", "<leader>ss", "<cmd>source Session.vim<cr>", desc("load session"))
 
 -- ============================================================================
 -- Neogen
 -- ============================================================================
-map("n", "<leader>nf", "<cmd>lua require('neogen').generate()<cr>", annotate(opts, "generate docstring"))
+map("n", "<leader>nf", "<cmd>lua require('neogen').generate()<cr>", desc("generate docstring"))
