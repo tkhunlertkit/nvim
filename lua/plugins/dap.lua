@@ -97,11 +97,17 @@ return {
 		local dap = require("dap")
 
 		-- Configure signs
-		vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticError", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticError", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticError", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticInfo", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticWarn", linehl = "Visual", numhl = "" })
+		vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError", linehl = "", numhl = "" })
+		vim.fn.sign_define(
+			"DapBreakpointCondition",
+			{ text = "◆", texthl = "DiagnosticError", linehl = "", numhl = "" }
+		)
+		vim.fn.sign_define(
+			"DapBreakpointRejected",
+			{ text = "", texthl = "DiagnosticError", linehl = "", numhl = "" }
+		)
+		vim.fn.sign_define("DapLogPoint", { text = "◆", texthl = "DiagnosticInfo", linehl = "", numhl = "" })
+		vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticWarn", linehl = "Visual", numhl = "" })
 
 		-- Python configuration
 		dap.adapters.python = {
@@ -115,7 +121,7 @@ return {
 				type = "python",
 				request = "launch",
 				name = "Launch file",
-				program = "",
+				program = "${file}",
 				pythonPath = function()
 					return "/usr/bin/python3"
 				end,
