@@ -12,8 +12,9 @@
 /undo/
 
 # Local session files
-session.vim
+Session.vim
 .netrwhist
+startup.log
 
 # IDE
 .vscode/
@@ -32,5 +33,3 @@ session.vim
 # Backup files
 *.bak
 
-# nvim session files
-*.vim

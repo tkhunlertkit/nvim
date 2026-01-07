@@ -37,8 +37,8 @@ opt.termguicolors = true -- True color support
 opt.wrap = true -- Wrap long lines
 opt.breakindent = true -- Preserve indentation on wrapped lines
 opt.showbreak = "  → " -- Show break indicator
-opt.scrolloff = 8 -- Scroll padding
-opt.sidescrolloff = 8 -- Horizontal scroll padding
+opt.scrolloff = 10 -- Scroll padding
+opt.sidescrolloff = 10 -- Horizontal scroll padding
 opt.splitbelow = true -- Horizontal split position
 opt.splitright = true -- Vertical split position
 
